@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⚡ InstantVM · Windows Launcher</title>
+<link rel="stylesheet" href="../../prod/pages/ui/style.css">
+<link rel="stylesheet" href="../../prod/pages/ui/desktop.css">
+<script src="../../prod/pages/v86/libv86.js"></script>
+</head>
+<body>
+
+<div class="desktop M">
+  <div id="splash">
+    <div style="font-size:52px;margin-bottom:8px">🪟</div>
+    <h1 style="font-size:22px;font-weight:700;color:var(--wh)">Windows Launcher</h1>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">DSL boots → installs QEMU → launches Windows inside the VM</p>
+    <p style="color:var(--er);font-size:7px;margin-top:2px">⚠ Experimental — VM-in-VM is slow in browser emulation</p>
+
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:center">
+      <div onclick="launchWin()" style="background:var(--card);border:2px solid var(--ig);border-radius:8px;padding:20px 30px;cursor:pointer;text-align:center"
+           onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:36px">🪟</div>
+        <div style="color:var(--wh);font-size:12px;font-weight:700;margin-top:4px">Launch</div>
+        <div style="color:var(--ig);font-size:7px">DSL → QEMU → Windows</div>
+      </div>
+    </div>
+
+    <div id="log" style="margin-top:16px;background:var(--card);border:1px solid var(--b);border-radius:4px;padding:8px 12px;max-width:500px;font-size:8px;text-align:left;display:none;max-height:200px;overflow-y:auto"></div>
+  </div>
+
+  <div id="screen-wrap" style="display:none;position:absolute;inset:0;background:#000"></div>
+</div>
+
+<div class="taskbar" id="taskbar">
+  <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
+  <span style="flex:1"></span>
+  <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop</span>
+  <span style="color:var(--t2);font-size:7px;margin-left:6px">InstantVM · Win Launcher</span>
+  <span class="tb-clock" id="tb-clock"></span>
+</div>
+
+<script src="vm/launcher.js"></script>
+<script>
+setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
+</script>
+</body>
+</html>

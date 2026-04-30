@@ -3,55 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>⚡ InstantVM — Browser</title>
+<title>⚡ InstantVM</title>
 <link rel="stylesheet" href="ui/style.css">
-<script src="https://nickvdp.com/v86/build/libv86.js"></script>
+<link rel="stylesheet" href="ui/desktop.css">
+<script src="https://copy.sh/v86/lib/libv86.js"></script>
 </head>
 <body>
-<div class="H">
-  <span style="color:var(--ign);font-weight:700;font-size:12px">⚡ InstantVM</span>
-  <span style="color:var(--b)">│</span>
-  <span id="state" style="color:var(--t2);font-size:8px">● SELECT OS</span>
-  <span style="flex:1"></span>
-  <span class="btn go" onclick="bootVM('linux')">🐧 Alpine</span>
-  <span class="btn" onclick="bootVM('linux-full')">🐧 Arch</span>
-  <span class="btn" onclick="bootVM('freedos')">💾 FreeDOS</span>
-  <span style="color:var(--b);margin:0 4px">│</span>
-  <span class="btn" onclick="stopVM()" style="border-color:var(--er);color:var(--er)">■ Stop</span>
-</div>
-<div class="M">
+
+<div class="desktop M">
   <div id="boot-splash">
-    <div style="font-size:48px;margin-bottom:12px">⚡</div>
-    <h1 style="font-family:'IBM Plex Mono';font-size:20px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:10px;margin-top:6px">Boot a real OS in your browser — x86 emulator via WebAssembly</p>
-    <div style="margin-top:16px;display:flex;gap:8px">
-      <div onclick="bootVM('linux')" style="background:var(--card);border:1px solid var(--b);border-radius:6px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s"
-           onmouseover="this.style.borderColor='var(--ok)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">🐧</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Alpine Linux</div>
-        <div style="color:var(--t2);font-size:7px">128MB · Fast boot</div>
+    <div style="font-size:52px;margin-bottom:8px">⚡</div>
+    <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">VMs + Apps — click to launch</p>
+
+    <div class="app-grid">
+      <div class="app-icon" onclick="launchApp('vm-alpine')">
+        <div class="ico">🐧</div><div class="lbl">Alpine VM</div>
       </div>
-      <div onclick="bootVM('linux-full')" style="background:var(--card);border:1px solid var(--b);border-radius:6px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s"
-           onmouseover="this.style.borderColor='var(--ig)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">🐧</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Arch Linux</div>
-        <div style="color:var(--t2);font-size:7px">512MB · Full system</div>
+      <div class="app-icon" onclick="launchApp('vm-arch')">
+        <div class="ico">🐧</div><div class="lbl">Arch VM</div>
       </div>
-      <div onclick="bootVM('freedos')" style="background:var(--card);border:1px solid var(--b);border-radius:6px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s"
-           onmouseover="this.style.borderColor='var(--ign)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">💾</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">FreeDOS</div>
-        <div style="color:var(--t2);font-size:7px">32MB · Retro</div>
+      <div class="app-icon" onclick="launchApp('vm-freedos')">
+        <div class="ico">💾</div><div class="lbl">FreeDOS</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('gitcontrol')">
+        <div class="ico">🎛️</div><div class="lbl">GitControl</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('gitscada')">
+        <div class="ico">🏭</div><div class="lbl">GitSCADA</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('githmi')">
+        <div class="ico">🖥️</div><div class="lbl">GitHMI</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('gittag')">
+        <div class="ico">🏷️</div><div class="lbl">GitTAG</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('gitplc')">
+        <div class="ico">📐</div><div class="lbl">GitPLC</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('ignition')">
+        <div class="ico">🔥</div><div class="lbl">Ignition</div>
+      </div>
+      <div class="app-icon" onclick="launchApp('perspective')">
+        <div class="ico">🏗️</div><div class="lbl">Assway</div>
       </div>
     </div>
   </div>
-  <div id="screen-wrap" style="width:100%;height:100%"></div>
+
+  <div id="screen-wrap" style="display:none"></div>
+  <iframe id="app-frame" style="display:none" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
 </div>
-<div class="S">
-  <span style="color:var(--ok)">● v86 WebAssembly x86 Emulator</span>
-  <span style="flex:1"></span>
-  <span style="color:var(--t2)">InstantVM · teslasolar.github.io/instantvm</span>
-</div>
+
+<div class="taskbar" id="taskbar"></div>
+
 <script src="vm/boot.js"></script>
+<script src="vm/apps.js"></script>
+<script src="vm/taskbar.js"></script>
+<script>renderTaskbar(); tickClock();</script>
 </body>
 </html>

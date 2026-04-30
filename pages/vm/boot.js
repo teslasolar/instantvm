@@ -29,11 +29,12 @@ async function bootVM(imageId) {
   if (!img) return;
 
   document.getElementById('boot-splash').classList.add('hidden');
+  document.getElementById('screen-wrap').style.display = '';
   document.getElementById('state').textContent = '● BOOTING ' + img.name + '...';
   document.getElementById('state').style.color = 'var(--wr)';
 
   var config = {
-    wasm_path: 'https://nickvdp.com/v86/build/v86.wasm',
+    wasm_path: 'https://copy.sh/v86/build/v86.wasm',
     screen_container: document.getElementById('screen-wrap'),
     memory_size: img.mem * 1024 * 1024,
     vga_memory_size: 8 * 1024 * 1024,

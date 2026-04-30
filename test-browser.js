@@ -47,7 +47,7 @@ function test(name, ok, detail) {
   await page.waitForTimeout(3000);
 
   // Splash hidden
-  const splashHidden = await page.$eval('#splash', el => el.classList.contains('hidden'));
+  const splashHidden = await page.$eval('#splash', el => el.style.display === 'none');
   test('Splash hidden after launch', splashHidden);
 
   // Screen wrap visible
@@ -93,7 +93,7 @@ function test(name, ok, detail) {
   const afterStop = await page.$eval('#state', el => el.textContent);
   test('Status back to READY after stop', afterStop.includes('READY'), afterStop);
 
-  const splashBack = await page.$eval('#splash', el => !el.classList.contains('hidden'));
+  const splashBack = await page.$eval('#splash', el => el.style.display !== 'none');
   test('Splash restored after stop', splashBack);
 
   console.log('\n═══════════════════════════');

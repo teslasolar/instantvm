@@ -6,12 +6,12 @@ async function initGPU() {
   try {
     gpu.adapter = await navigator.gpu.requestAdapter({ powerPreference:'high-performance' });
     if (!gpu.adapter) { gpu.info = { error:'no adapter' }; return false; }
-    var ai = await gpu.adapter.requestAdapterInfo();
+    var ai = gpu.adapter.info || (gpu.adapter.requestAdapterInfo ? await gpu.adapter.requestAdapterInfo() : {});
     gpu.device = await gpu.adapter.requestDevice();
     gpu.available = true;
     gpu.info = {
-      vendor: ai.vendor, arch: ai.architecture,
-      device: ai.device, desc: ai.description,
+      vendor: ai.vendor||'', arch: ai.architecture||'',
+      device: ai.device||'', desc: ai.description||'',
       maxBuf: gpu.device.limits.maxBufferSize,
       maxTex: gpu.device.limits.maxTextureDimension2D,
       maxWG: gpu.device.limits.maxComputeWorkgroupSizeX,

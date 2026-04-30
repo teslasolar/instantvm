@@ -31,13 +31,19 @@ function fitScreen() {
     return;
   }
 
-  // Text-mode: let v86 render at native size, center it
+  // Text-mode: override v86's inline font, scale to fit
   var divs = scr.querySelectorAll(':scope > div');
   for (var i = 0; i < divs.length; i++) {
     var d = divs[i];
     if (!d.children.length) continue;
-    d.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;'
-      + 'font-size:14px;line-height:1.2;overflow:auto';
+    // Calculate font size so 80 chars fill the width
+    var fontSize = Math.floor(sw / 80 * 0.95);
+    d.style.cssText = 'position:absolute;top:0;left:0;width:' + sw + 'px;height:' + sh + 'px;overflow:hidden';
+    var spans = d.querySelectorAll('span');
+    for (var j = 0; j < spans.length; j++) {
+      spans[j].style.fontSize = fontSize + 'px';
+      spans[j].style.lineHeight = '1.15';
+    }
   }
 }
 

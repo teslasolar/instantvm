@@ -14,55 +14,67 @@
   <div id="splash">
     <div style="font-size:52px;margin-bottom:8px">⚡</div>
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:9px;margin-top:4px">Windows VM running in your browser. Nothing local. Nothing to install.</p>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">Real x86 VMs in your browser. Nothing to install.</p>
 
-    <div style="margin-top:20px;display:flex;gap:12px;justify-content:center">
-      <div onclick="bootVM('freedos')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:20px 30px;cursor:pointer;text-align:center;transition:.2s"
+    <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <div onclick="launch('dsl')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
            onmouseover="this.style.borderColor='var(--ok)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:36px">💾</div>
-        <div style="color:var(--wh);font-size:12px;font-weight:700;margin-top:6px">FreeDOS</div>
-        <div style="color:var(--t2);font-size:7px;margin-top:2px">Boots instantly</div>
+        <div style="font-size:32px">🐧</div>
+        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">DSL</div>
+        <div style="color:var(--ok);font-size:7px">Full X11 Desktop</div>
+        <div style="color:var(--t2);font-size:6px">50MB · 256MB RAM</div>
       </div>
-      <div onclick="bootVM('windows')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:20px 30px;cursor:pointer;text-align:center;transition:.2s"
+      <div onclick="launch('linux')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
            onmouseover="this.style.borderColor='var(--ig)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:36px">🪟</div>
-        <div style="color:var(--wh);font-size:12px;font-weight:700;margin-top:6px">Windows 1.01</div>
-        <div style="color:var(--t2);font-size:7px;margin-top:2px">First Windows GUI</div>
+        <div style="font-size:32px">🐧</div>
+        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Linux</div>
+        <div style="color:var(--ig);font-size:7px">Buildroot Shell</div>
+        <div style="color:var(--t2);font-size:6px">7MB · 128MB RAM</div>
+      </div>
+      <div onclick="launch('freedos')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
+           onmouseover="this.style.borderColor='var(--ign)'" onmouseout="this.style.borderColor='var(--b)'">
+        <div style="font-size:32px">💾</div>
+        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">FreeDOS</div>
+        <div style="color:var(--ign);font-size:7px">DOS Prompt</div>
+        <div style="color:var(--t2);font-size:6px">720KB · Instant</div>
+      </div>
+      <div onclick="launch('windows101')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
+           onmouseover="this.style.borderColor='var(--lav)'" onmouseout="this.style.borderColor='var(--b)'">
+        <div style="font-size:32px">🪟</div>
+        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Win 1.01</div>
+        <div style="color:var(--lav);font-size:7px">First Windows</div>
+        <div style="color:var(--t2);font-size:6px">614KB · Floppy</div>
       </div>
     </div>
 
-    <div style="margin-top:20px;color:var(--t2);font-size:7px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.8">
-      <div style="color:var(--ign);font-size:8px;font-weight:600;margin-bottom:4px">How it works</div>
-      <div>v86 is an x86 emulator compiled to WebAssembly</div>
-      <div>It boots a real Windows disk image in your browser</div>
-      <div>No plugins. No downloads. No server. Just this page.</div>
-      <div>Close the tab → gone. Nothing persists.</div>
+    <div style="margin-top:16px;color:var(--t2);font-size:7px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7">
+      <div style="color:var(--ign);font-size:8px;font-weight:600;margin-bottom:3px">How it works</div>
+      <div>v86 x86 emulator compiled to WebAssembly</div>
+      <div>Boots real OS disk images — fully interactive</div>
+      <div>No plugins, no downloads, no server</div>
+      <div>Close the tab → VM destroyed</div>
     </div>
   </div>
 
-  <div id="screen-wrap" style="display:none;position:absolute;inset:0"></div>
+  <div id="screen-wrap" style="display:none;position:absolute;inset:0;background:#000"></div>
 </div>
 
 <div class="taskbar" id="taskbar">
   <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
   <span style="flex:1"></span>
-  <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop VM</span>
+  <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop</span>
   <span style="color:var(--t2);font-size:7px;margin-left:6px">InstantVM</span>
   <span class="tb-clock" id="tb-clock"></span>
 </div>
 
 <script src="vm/emulator.js"></script>
 <script>
-var _origBoot = bootWindows;
-bootWindows = function() {
-  _origBoot();
+function launch(id) {
+  bootVM(id);
   document.getElementById('stop-btn').style.display = '';
-};
-var _origStop = stopVM;
-stopVM = function() {
-  _origStop();
-  document.getElementById('stop-btn').style.display = 'none';
-};
+}
+var _stop = stopVM;
+stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; };
 setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
 </script>
 </body>

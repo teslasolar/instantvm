@@ -1,56 +1,56 @@
-// emulator.js — boot OS in browser via v86 WebAssembly
+// emulator.js — multi-OS boot via v86 WebAssembly
 var emulator = null;
 var V86_BASE = 'v86';
 
-function bootVM(image) {
+var IMAGES = {
+  dsl:        { name:'Damn Small Linux', mem:256, vga:32, cdrom:'dsl.iso' },
+  linux:      { name:'Buildroot Linux',  mem:128, vga:8,  cdrom:'linux4.iso' },
+  freedos:    { name:'FreeDOS',          mem:32,  vga:8,  fda:'freedos.img' },
+  windows101: { name:'Windows 1.01',     mem:32,  vga:8,  fda:'windows101.img' },
+};
+
+function bootVM(id) {
   if (emulator) stopVM();
+  var img = IMAGES[id];
+  if (!img) return;
 
   document.getElementById('splash').style.display = 'none';
   var wrap = document.getElementById('screen-wrap');
   wrap.style.display = '';
-  wrap.innerHTML = '<div id="boot-loader" style="color:#42e898;font-size:12px;font-family:monospace;padding:20px">Loading v86 WASM + BIOS + disk image...</div>';
-  setStatus('● LOADING...', 'var(--wr)');
+  wrap.innerHTML = '<div id="boot-loader" style="color:#42e898;font-size:12px;font-family:monospace;padding:20px">Loading ' + img.name + '...</div>';
+  setStatus('● LOADING ' + img.name + '...', 'var(--wr)');
 
   var config = {
     wasm_path: V86_BASE + '/v86.wasm',
-    memory_size: 32 * 1024 * 1024,
-    vga_memory_size: 8 * 1024 * 1024,
+    memory_size: img.mem * 1024 * 1024,
+    vga_memory_size: img.vga * 1024 * 1024,
     screen_container: wrap,
     bios: { url: V86_BASE + '/seabios.bin' },
     vga_bios: { url: V86_BASE + '/vgabios.bin' },
     autostart: true,
   };
 
-  if (image === 'freedos') config.fda = { url: V86_BASE + '/freedos.img' };
-  else config.fda = { url: V86_BASE + '/windows101.img' };
+  if (img.fda) config.fda = { url: V86_BASE + '/' + img.fda };
+  if (img.cdrom) config.cdrom = { url: V86_BASE + '/' + img.cdrom };
 
-  try {
-    emulator = new V86(config);
-  } catch (e) {
-    wrap.innerHTML = '<div style="color:#ff4466;padding:20px">v86 failed: ' + e.message + '</div>';
-    setStatus('● ERROR', 'var(--er)');
-    return;
-  }
+  try { emulator = new V86(config); }
+  catch (e) { wrap.innerHTML = '<div style="color:#ff4466;padding:20px">v86 error: ' + e.message + '</div>'; return; }
 
   emulator.add_listener('emulator-ready', function() {
-    var loader = document.getElementById('boot-loader');
-    if (loader) loader.remove();
-    setStatus('● RUNNING', 'var(--ok)');
+    var l = document.getElementById('boot-loader');
+    if (l) l.remove();
+    setStatus('● ' + img.name + ' RUNNING', 'var(--ok)');
   });
 
-  emulator.add_listener('serial0-output-byte', function(byte) {
-    var loader = document.getElementById('boot-loader');
-    if (loader) { loader.remove(); setStatus('● BOOTING...', 'var(--wr)'); }
+  emulator.add_listener('serial0-output-byte', function() {
+    var l = document.getElementById('boot-loader');
+    if (l) { l.remove(); setStatus('● BOOTING ' + img.name + '...', 'var(--wr)'); }
   });
 }
 
-function bootWindows() { bootVM('windows'); }
-
 function stopVM() {
   if (!emulator) return;
-  emulator.stop();
-  emulator.destroy();
-  emulator = null;
+  emulator.stop(); emulator.destroy(); emulator = null;
   document.getElementById('screen-wrap').style.display = 'none';
   document.getElementById('splash').style.display = '';
   setStatus('● READY', 'var(--ok)');

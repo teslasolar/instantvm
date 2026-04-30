@@ -1,0 +1,13 @@
+{
+  "_udt": "OS_Image",
+  "id": "linux",
+  "name": "Buildroot Linux",
+  "icon": "🐧",
+  "type": "cdrom",
+  "url": "v86/linux4.iso",
+  "size_kb": 7577,
+  "memory_mb": 128,
+  "vga_mb": 8,
+  "needs_bios": true,
+  "boot_mode": "text"
+}

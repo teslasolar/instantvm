@@ -1,0 +1,13 @@
+{
+  "_udt": "OS_Image",
+  "id": "dsl",
+  "name": "Damn Small Linux",
+  "icon": "🐧",
+  "type": "cdrom",
+  "url": "v86/dsl.iso",
+  "size_kb": 51100,
+  "memory_mb": 256,
+  "vga_mb": 32,
+  "needs_bios": true,
+  "boot_mode": "gui"
+}

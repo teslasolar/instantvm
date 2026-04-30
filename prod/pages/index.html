@@ -72,10 +72,16 @@
 function launch(id) {
   bootVM(id);
   document.getElementById('stop-btn').style.display = '';
+  history.replaceState(null, '', '?os=' + id);
 }
 var _stop = stopVM;
-stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; };
+stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; history.replaceState(null, '', location.pathname); };
 setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
+
+// Auto-boot from URL: ?os=dsl, ?os=linux, ?os=freedos, ?os=windows101
+var params = new URLSearchParams(location.search);
+var autoOS = params.get('os');
+if (autoOS && IMAGES[autoOS]) launch(autoOS);
 </script>
 </body>
 </html>

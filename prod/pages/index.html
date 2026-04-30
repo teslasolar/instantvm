@@ -17,12 +17,19 @@
     <p style="color:var(--t2);font-size:9px;margin-top:4px">Real x86 VMs in your browser. Nothing to install.</p>
 
     <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <div onclick="autoBoot('dsl')" style="background:var(--card);border:2px solid var(--ok);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
+           onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:32px">⚡</div>
+        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">DSL + Tools</div>
+        <div style="color:var(--ok);font-size:7px">Auto-setup desktop</div>
+        <div style="color:var(--t2);font-size:6px">50MB · Tag Store</div>
+      </div>
       <div onclick="launch('dsl')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
            onmouseover="this.style.borderColor='var(--ok)'" onmouseout="this.style.borderColor='var(--b)'">
         <div style="font-size:32px">🐧</div>
         <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">DSL</div>
-        <div style="color:var(--ok);font-size:7px">Full X11 Desktop</div>
-        <div style="color:var(--t2);font-size:6px">50MB · 256MB RAM</div>
+        <div style="color:var(--ok);font-size:7px">Plain desktop</div>
+        <div style="color:var(--t2);font-size:6px">50MB · Manual</div>
       </div>
       <div onclick="launch('linux')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
            onmouseover="this.style.borderColor='var(--ig)'" onmouseout="this.style.borderColor='var(--b)'">
@@ -68,6 +75,7 @@
 </div>
 
 <script src="vm/emulator.js"></script>
+<script src="vm/autoboot.js"></script>
 <script>
 function launch(id) {
   bootVM(id);
@@ -78,10 +86,13 @@ var _stop = stopVM;
 stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; history.replaceState(null, '', location.pathname); };
 setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
 
-// Auto-boot from URL: ?os=dsl, ?os=linux, ?os=freedos, ?os=windows101
 var params = new URLSearchParams(location.search);
 var autoOS = params.get('os');
-if (autoOS && IMAGES[autoOS]) launch(autoOS);
+var autoSetup = params.get('setup');
+if (autoOS && IMAGES[autoOS]) {
+  if (autoSetup) autoBoot(autoOS);
+  else launch(autoOS);
+}
 </script>
 </body>
 </html>

@@ -64,20 +64,20 @@ function stopVM() {
 function fixScale() {
   var wrap = document.getElementById('screen-wrap');
   if (!wrap || !emulator) return;
-  var ww = wrap.clientWidth;
-  var wh = wrap.clientHeight;
+  var rect = wrap.getBoundingClientRect();
+  var ww = rect.width;
+  var wh = rect.height;
 
-  // Graphical canvas
+  // Graphical canvas — use CSS transform for pixel-perfect scaling
   var canvas = wrap.querySelector('canvas');
-  if (canvas) {
-    var cw = canvas.width || 640;
-    var ch = canvas.height || 480;
-    canvas.style.width = ww + 'px';
-    canvas.style.height = wh + 'px';
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    try { emulator.screen_set_scale(ww / cw, wh / ch); } catch(e) {}
+  if (canvas && canvas.width > 0) {
+    var cw = canvas.width;
+    var ch = canvas.height;
+    var sx = ww / cw;
+    var sy = wh / ch;
+    canvas.style.cssText = 'position:absolute;top:0;left:0;transform-origin:0 0;'
+      + 'transform:scale(' + sx + ',' + sy + ');image-rendering:pixelated;';
+    try { emulator.screen_set_scale(sx, sy); } catch(e) {}
   }
 
   // Text-mode div (DOS/BIOS output)
@@ -85,14 +85,9 @@ function fixScale() {
   for (var i = 0; i < divs.length; i++) {
     var d = divs[i];
     if (d.id === 'boot-loader') continue;
-    var sw = d.scrollWidth || 720;
-    var sh = d.scrollHeight || 400;
-    if (sw < 100) continue;
-    d.style.position = 'absolute';
-    d.style.top = '0';
-    d.style.left = '0';
-    d.style.transformOrigin = '0 0';
-    d.style.transform = 'scale(' + (ww/sw) + ',' + (wh/sh) + ')';
+    if (!d.children.length) continue;
+    d.style.cssText = 'position:absolute;top:0;left:0;transform-origin:0 0;'
+      + 'transform:scale(' + (ww / (d.scrollWidth || 720)) + ',' + (wh / (d.scrollHeight || 400)) + ')';
   }
 }
 

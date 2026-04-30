@@ -1,0 +1,13 @@
+{
+  "_udt": "VM_Instance",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "id": { "type": "STRING", "desc": "VM instance ID" },
+    "os": { "type": "ENUM", "values": ["freedos", "windows101", "win98", "winxp", "linux", "custom"] },
+    "state": { "type": "ENUM", "values": ["IDLE", "LOADING", "BOOTING", "RUNNING", "STOPPED", "ERROR"] },
+    "memory_mb": { "type": "INT", "default": 32 },
+    "boot_ms": { "type": "INT", "desc": "Time to reach RUNNING" },
+    "image_url": { "type": "STRING" },
+    "image_size_kb": { "type": "INT" }
+  }
+}

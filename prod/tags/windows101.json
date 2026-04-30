@@ -1,0 +1,13 @@
+{
+  "_udt": "OS_Image",
+  "id": "windows101",
+  "name": "Windows 1.01",
+  "icon": "🪟",
+  "type": "floppy",
+  "url": "v86/windows101.img",
+  "size_kb": 614,
+  "memory_mb": 32,
+  "vga_mb": 8,
+  "needs_bios": true,
+  "boot_mode": "gui"
+}

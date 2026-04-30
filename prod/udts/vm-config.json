@@ -1,0 +1,12 @@
+{
+  "_udt": "VM_Config",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "default_os": { "type": "STRING", "default": "freedos" },
+    "v86_base": { "type": "STRING", "default": "v86" },
+    "bios": { "type": "STRING", "default": "v86/seabios.bin" },
+    "vga_bios": { "type": "STRING", "default": "v86/vgabios.bin" },
+    "issue_label": { "type": "STRING", "default": "instantvm" },
+    "repo": { "type": "STRING", "default": "teslasolar/instantvm" }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_udt": "OS_Image",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "id": { "type": "STRING", "desc": "Image identifier" },
+    "name": { "type": "STRING" },
+    "icon": { "type": "STRING" },
+    "type": { "type": "ENUM", "values": ["floppy", "hd", "cdrom", "state"] },
+    "url": { "type": "STRING", "desc": "Relative path or absolute URL" },
+    "size_kb": { "type": "INT" },
+    "memory_mb": { "type": "INT", "desc": "Required RAM" },
+    "vga_mb": { "type": "INT", "default": 8 },
+    "needs_bios": { "type": "BOOL", "default": true },
+    "boot_mode": { "type": "ENUM", "values": ["text", "gui"] }
+  }
+}

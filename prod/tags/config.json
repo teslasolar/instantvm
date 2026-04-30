@@ -1,0 +1,9 @@
+{
+  "_udt": "VM_Config",
+  "default_os": "freedos",
+  "v86_base": "v86",
+  "bios": "v86/seabios.bin",
+  "vga_bios": "v86/vgabios.bin",
+  "issue_label": "instantvm",
+  "repo": "teslasolar/instantvm"
+}

@@ -1,37 +1,45 @@
 # ⚡ InstantVM
 
-**Disposable Windows VMs in one click — Electron + Windows Sandbox**
+**x86 VM in the browser via WebAssembly — nothing to install**
 
-Boot a sandboxed Windows environment instantly. Map folders, run
-setup scripts, auto-teardown on close. Templates for common workloads.
-
-## How It Works
-
-1. Pick a template (or create custom)
-2. Click Launch → generates `.wsb` config → boots Windows Sandbox
-3. Mapped folders + setup script run automatically inside the VM
-4. Close the VM → everything destroyed (disposable)
-
-## Templates
-
-| Template | What |
-|----------|------|
-| `ignition-designer` | Ignition Designer with cached JRE + gateway connect |
-| `dev-sandbox` | Node + Python + Git — clean dev environment |
-| `plc-sim` | GitPLC simulator with mock tags |
-| `clean-browser` | Isolated browser for testing |
-| `custom` | Build your own with folder maps + setup script |
-
-## Structure
+## prod/ — Working, deployed to GitHub Pages
 
 ```
-instantvm/
-├── app/                Electron app
-│   ├── main.js         Entry point
-│   ├── vm/             VM lifecycle (generate wsb, launch, monitor)
-│   └── ui/             Dock UI (css, panels, scripts)
-├── templates/          .wsb templates + setup scripts
-├── bin/                CLI (instantvm <template>)
-├── package.json
-└── README.md
+prod/
+├── pages/              Live GitHub Pages app
+│   ├── v86/            Self-hosted: libv86.js, v86.wasm, BIOS, disk images
+│   ├── vm/             emulator.js — boot/stop lifecycle
+│   └── ui/             Dark theme CSS
+├── udts/               UDT definitions (VM_Instance, OS_Image, VM_Config)
+├── tags/               Tag instances (freedos, windows101, config)
+└── index.html          Entry point
+```
+
+## dev/ — Work in progress, do not deploy
+
+```
+dev/
+├── electron/           Native Windows Sandbox launcher (Electron app)
+│   ├── vm/             .wsb generation, templates, launcher
+│   ├── ui/             Electron dock UI
+│   ├── bin/            CLI: instantvm <template>
+│   └── templates/      Setup scripts for sandbox VMs
+├── test-browser.js     Playwright Chrome test suite
+└── screenshots/        Debug screenshots
+```
+
+## UDTs
+
+| UDT | Fields | What |
+|-----|--------|------|
+| `VM_Instance` | id, os, state, memory, boot_ms | Running VM state |
+| `OS_Image` | id, name, icon, type, url, size, boot_mode | Bootable disk image |
+| `VM_Config` | default_os, v86_base, bios paths, issue_label | System config |
+
+## Dynamic Config via GitHub Issues
+
+Create issues with label `instantvm` + JSON code block to add OS images:
+
+```json
+{"_udt":"OS_Image","id":"myos","name":"My OS","type":"floppy","url":"v86/myos.img","memory_mb":32}
 ```

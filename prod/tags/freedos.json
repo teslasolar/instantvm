@@ -1,0 +1,13 @@
+{
+  "_udt": "OS_Image",
+  "id": "freedos",
+  "name": "FreeDOS",
+  "icon": "💾",
+  "type": "floppy",
+  "url": "v86/freedos.img",
+  "size_kb": 720,
+  "memory_mb": 32,
+  "vga_mb": 8,
+  "needs_bios": true,
+  "boot_mode": "text"
+}

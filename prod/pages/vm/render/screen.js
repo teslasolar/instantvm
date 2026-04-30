@@ -1,8 +1,9 @@
 // screen.js — show/hide/fit the VM display to the viewport
 function showScreen() {
   document.getElementById('launcher').style.display = 'none';
-  document.getElementById('vm-screen').style.display = '';
-  document.getElementById('vm-screen').innerHTML = '';
+  var scr = document.getElementById('vm-screen');
+  scr.style.display = 'block';
+  scr.innerHTML = '';
   document.getElementById('stop-btn').style.display = '';
 }
 

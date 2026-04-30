@@ -1,0 +1,18 @@
+.vm-card { background:var(--card); border:1px solid var(--b); border-radius:8px;
+  padding:20px; cursor:pointer; transition:.2s; position:relative; overflow:hidden; }
+.vm-card:hover { border-color:var(--ig); transform:translateY(-2px); box-shadow:0 4px 20px rgba(56,181,249,.1); }
+.vm-card .icon { font-size:36px; margin-bottom:10px; }
+.vm-card .name { font-family:'IBM Plex Sans',sans-serif; font-size:16px; font-weight:700; color:var(--wh); }
+.vm-card .desc { font-size:8px; color:var(--t2); margin-top:4px; line-height:1.5; }
+.vm-card .meta { display:flex; gap:8px; margin-top:10px; font-size:7px; color:var(--t2); }
+.vm-card .meta span { background:var(--s2); padding:2px 6px; border-radius:3px; }
+.vm-card .bar { position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--ig); }
+.vm-card.running .bar { background:var(--ok); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.btn { background:var(--s2); border:1px solid var(--b); color:var(--t2); font-size:8px;
+       padding:3px 10px; cursor:pointer; border-radius:3px; }
+.btn:hover { border-color:var(--ig); color:var(--ig); }
+.btn.danger { border-color:var(--er); color:var(--er); }
+.badge { font-size:7px; padding:1px 5px; border-radius:8px; font-weight:600; }
+.badge.ok { background:rgba(66,232,152,.1); color:var(--ok); }
+.badge.na { background:rgba(62,78,100,.2); color:var(--t2); }

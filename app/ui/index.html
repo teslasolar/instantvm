@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>⚡ InstantVM</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/cards.css">
+</head>
+<body>
+<div class="H" id="header"></div>
+<div class="M" id="grid"></div>
+<div class="S" id="status"></div>
+<script>
+const { ipcRenderer } = require('electron');
+
+async function boot() {
+  document.getElementById('header').innerHTML =
+    '<span style="color:var(--ign);font-weight:700;font-size:13px">⚡ InstantVM</span>'
+    +'<span style="color:var(--b);margin:0 6px">│</span>'
+    +'<span id="state" style="color:var(--ok);font-size:8px">● READY</span>'
+    +'<span style="flex:1"></span>'
+    +'<span class="btn danger" onclick="killVM()">■ Kill VM</span>';
+
+  const vms = await ipcRenderer.invoke('vm-list');
+  const st = await ipcRenderer.invoke('vm-status');
+
+  document.getElementById('grid').innerHTML = vms.map(function(v) {
+    return '<div class="vm-card" onclick="launchVM(\''+v.id+'\')">'
+      +'<div class="bar"></div>'
+      +'<div class="icon">'+v.icon+'</div>'
+      +'<div class="name">'+v.name+'</div>'
+      +'<div class="desc">'+v.desc+'</div>'
+      +'<div class="meta">'
+      +'<span>'+v.memory+'MB RAM</span>'
+      +'<span class="badge '+(st.available?'ok':'na')+'">'+(st.available?'SANDBOX READY':'NOT INSTALLED')+'</span>'
+      +'</div></div>';
+  }).join('');
+
+  document.getElementById('status').innerHTML =
+    '<span style="color:'+(st.available?'var(--ok)':'var(--er)')+'">● '+(st.available?'Sandbox available':'Sandbox not enabled')+'</span>'
+    +'<span style="flex:1"></span>'
+    +'<span style="color:var(--t2)">InstantVM · Disposable Windows VMs</span>';
+}
+
+async function launchVM(id) {
+  document.getElementById('state').textContent = '● LAUNCHING ' + id + '...';
+  const r = await ipcRenderer.invoke('vm-launch', id);
+  document.getElementById('state').textContent = r.ok ? '● RUNNING' : '● FAIL: ' + r.error;
+  document.getElementById('state').style.color = r.ok ? 'var(--ok)' : 'var(--er)';
+}
+
+async function killVM() {
+  await ipcRenderer.invoke('vm-kill');
+  document.getElementById('state').textContent = '● READY';
+  document.getElementById('state').style.color = 'var(--ok)';
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+const vm = require('../app/vm');
+
+const arg = process.argv[2];
+
+if (!arg || arg === '--list' || arg === '-l') {
+  console.log('⚡ InstantVM — Disposable Windows VMs\n');
+  console.log('Status:', vm.isAvailable() ? '✓ Sandbox available' : '✗ Sandbox not installed');
+  console.log('\nTemplates:');
+  vm.list().forEach(t => console.log('  ' + t.icon + '  ' + t.id.padEnd(22) + t.desc));
+  console.log('\nUsage: instantvm <template>');
+  process.exit(0);
+}
+
+if (arg === '--kill' || arg === '-k') {
+  console.log(vm.kill() ? 'Killed' : 'No VM running');
+  process.exit(0);
+}
+
+const r = vm.launchTemplate(arg);
+console.log(JSON.stringify(r, null, 2));

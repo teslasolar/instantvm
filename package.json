@@ -1,0 +1,13 @@
+{
+  "name": "instantvm",
+  "version": "0.1.0",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "launch": "node bin/instantvm"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

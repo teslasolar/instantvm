@@ -40,12 +40,16 @@ function bootVM(id) {
     var l = document.getElementById('boot-loader');
     if (l) l.remove();
     setStatus('● ' + img.name + ' RUNNING', 'var(--ok)');
-    fixScale();
+    setTimeout(fixScale, 500);
   });
 
   emulator.add_listener('serial0-output-byte', function() {
     var l = document.getElementById('boot-loader');
     if (l) { l.remove(); setStatus('● BOOTING ' + img.name + '...', 'var(--wr)'); }
+  });
+
+  emulator.add_listener('screen-set-size-graphical', function() {
+    setTimeout(fixScale, 200);
   });
 }
 
@@ -58,18 +62,41 @@ function stopVM() {
 }
 
 function fixScale() {
-  var canvas = document.querySelector('#screen-wrap canvas');
-  if (!canvas || !emulator) return;
   var wrap = document.getElementById('screen-wrap');
-  var ww = wrap.clientWidth, wh = wrap.clientHeight;
-  var cw = canvas.width, ch = canvas.height;
-  var scale = Math.min(ww / cw, wh / ch);
-  canvas.style.width = Math.floor(cw * scale) + 'px';
-  canvas.style.height = Math.floor(ch * scale) + 'px';
-  emulator.screen_set_scale(scale, scale);
+  if (!wrap || !emulator) return;
+  var ww = wrap.clientWidth;
+  var wh = wrap.clientHeight;
+
+  // Graphical canvas
+  var canvas = wrap.querySelector('canvas');
+  if (canvas) {
+    var cw = canvas.width || 640;
+    var ch = canvas.height || 480;
+    canvas.style.width = ww + 'px';
+    canvas.style.height = wh + 'px';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    try { emulator.screen_set_scale(ww / cw, wh / ch); } catch(e) {}
+  }
+
+  // Text-mode div (DOS/BIOS output)
+  var divs = wrap.querySelectorAll(':scope > div');
+  for (var i = 0; i < divs.length; i++) {
+    var d = divs[i];
+    if (d.id === 'boot-loader') continue;
+    var sw = d.scrollWidth || 720;
+    var sh = d.scrollHeight || 400;
+    if (sw < 100) continue;
+    d.style.position = 'absolute';
+    d.style.top = '0';
+    d.style.left = '0';
+    d.style.transformOrigin = '0 0';
+    d.style.transform = 'scale(' + (ww/sw) + ',' + (wh/sh) + ')';
+  }
 }
 
-window.addEventListener('resize', function() { if (emulator) fixScale(); });
+window.addEventListener('resize', function() { if (emulator) setTimeout(fixScale, 100); });
 
 function setStatus(msg, color) {
   var el = document.getElementById('state');

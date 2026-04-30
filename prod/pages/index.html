@@ -68,6 +68,8 @@
 
 <div class="taskbar" id="taskbar">
   <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
+  <span style="color:var(--b);margin:0 4px">│</span>
+  <span id="gpu-bar" style="display:flex;gap:4px;align-items:center;font-size:7px"></span>
   <span style="flex:1"></span>
   <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop</span>
   <span style="color:var(--t2);font-size:7px;margin-left:6px">InstantVM</span>
@@ -75,6 +77,8 @@
 </div>
 
 <script src="vm/emulator.js"></script>
+<script src="vm/gpu.js"></script>
+<script src="vm/gpu-panel.js"></script>
 <script src="vm/autoboot.js"></script>
 <script>
 function launch(id) {
@@ -85,6 +89,8 @@ function launch(id) {
 var _stop = stopVM;
 stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; history.replaceState(null, '', location.pathname); };
 setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
+
+renderGPUPanel();
 
 var params = new URLSearchParams(location.search);
 var autoOS = params.get('os');

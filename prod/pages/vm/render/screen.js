@@ -31,16 +31,13 @@ function fitScreen() {
     return;
   }
 
-  // Text-mode: v86 renders 80×25 char grid in a div
-  // Each char is ~9px wide, ~16px tall → native ~720×400
+  // Text-mode: let v86 render at native size, center it
   var divs = scr.querySelectorAll(':scope > div');
   for (var i = 0; i < divs.length; i++) {
     var d = divs[i];
     if (!d.children.length) continue;
-    var dw = 720;
-    var dh = 400;
-    d.style.cssText = 'position:absolute;top:0;left:0;width:' + dw + 'px;height:' + dh + 'px;'
-      + 'transform-origin:0 0;transform:scale(' + (sw/dw) + ',' + (sh/dh) + ');overflow:hidden';
+    d.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;'
+      + 'font-size:14px;line-height:1.2;overflow:auto';
   }
 }
 

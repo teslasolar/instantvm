@@ -31,21 +31,16 @@ function fitScreen() {
     return;
   }
 
-  // Text-mode: v86 creates a div with span rows (80 cols, ~25 rows)
+  // Text-mode: v86 renders 80×25 char grid in a div
+  // Each char is ~9px wide, ~16px tall → native ~720×400
   var divs = scr.querySelectorAll(':scope > div');
   for (var i = 0; i < divs.length; i++) {
     var d = divs[i];
     if (!d.children.length) continue;
-    // Reset transform to measure natural size
-    d.style.transform = 'none';
-    d.style.position = 'absolute';
-    d.style.top = '0';
-    d.style.left = '0';
-    var dw = d.offsetWidth || d.scrollWidth;
-    var dh = d.offsetHeight || d.scrollHeight;
-    if (dw < 50) continue;
-    d.style.transformOrigin = '0 0';
-    d.style.transform = 'scale(' + (sw / dw) + ',' + (sh / dh) + ')';
+    var dw = 720;
+    var dh = 400;
+    d.style.cssText = 'position:absolute;top:0;left:0;width:' + dw + 'px;height:' + dh + 'px;'
+      + 'transform-origin:0 0;transform:scale(' + (sw/dw) + ',' + (sh/dh) + ');overflow:hidden';
   }
 }
 

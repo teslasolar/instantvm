@@ -6,82 +6,55 @@
 <title>⚡ InstantVM</title>
 <link rel="stylesheet" href="ui/style.css">
 <link rel="stylesheet" href="ui/desktop.css">
-<script src="https://copy.sh/v86/lib/libv86.js"></script>
 </head>
 <body>
 
 <div class="desktop M">
-  <div id="boot-splash">
+  <div id="splash">
     <div style="font-size:52px;margin-bottom:8px">⚡</div>
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:9px;margin-top:4px">VMs + Apps — click to launch</p>
-    <p id="backend-badge" style="font-size:7px;margin-top:4px"></p>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">Disposable Windows VMs — click to launch</p>
+    <p id="backend-badge" style="font-size:7px;margin-top:6px;color:var(--t2)">Checking backend...</p>
 
-    <div style="color:var(--ign);font-size:8px;margin-top:16px;letter-spacing:1px">NATIVE VMs <span id="native-badge" style="font-size:6px"></span></div>
-    <div class="app-grid">
-      <div class="app-icon" onclick="launchApp('win-sandbox')">
-        <div class="ico">🪟</div><div class="lbl">Windows Sandbox</div>
+    <div class="app-grid" style="margin-top:20px">
+      <div class="app-icon" onclick="launchApp('ignition')">
+        <div class="ico">🔥</div><div class="lbl">Ignition Designer</div>
       </div>
-      <div class="app-icon" onclick="launchApp('dev-sandbox')">
+      <div class="app-icon" onclick="launchApp('dev')">
         <div class="ico">🛠️</div><div class="lbl">Dev Sandbox</div>
       </div>
-      <div class="app-icon" onclick="launchApp('plc-sim')">
+      <div class="app-icon" onclick="launchApp('plc')">
         <div class="ico">📐</div><div class="lbl">PLC Sim</div>
       </div>
-      <div class="app-icon" onclick="launchApp('clean-browse')">
+      <div class="app-icon" onclick="launchApp('browser')">
         <div class="ico">🌐</div><div class="lbl">Clean Browser</div>
-      </div>
-    </div>
-    <div style="color:var(--ok);font-size:8px;margin-top:12px;letter-spacing:1px">BROWSER VMs</div>
-    <div class="app-grid">
-      <div class="app-icon" onclick="launchApp('vm-win98')">
-        <div class="ico">💾</div><div class="lbl">Windows 98</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('vm-alpine')">
-        <div class="ico">🐧</div><div class="lbl">Alpine Linux</div>
-      </div>
-    </div>
-    <div style="color:var(--ig);font-size:8px;margin-top:12px;letter-spacing:1px">GIT CONTROLS</div>
-    <div class="app-grid">
-      <div class="app-icon" onclick="launchApp('gitcontrol')">
-        <div class="ico">🎛️</div><div class="lbl">GitControl</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('gitscada')">
-        <div class="ico">🏭</div><div class="lbl">GitSCADA</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('githmi')">
-        <div class="ico">🖥️</div><div class="lbl">GitHMI</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('gittag')">
-        <div class="ico">🏷️</div><div class="lbl">GitTAG</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('gitplc')">
-        <div class="ico">📐</div><div class="lbl">GitPLC</div>
       </div>
     </div>
   </div>
 
-  <div id="screen-wrap" style="display:none"></div>
-  <iframe id="app-frame" style="display:none" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+  <div id="running" class="hidden" style="text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🪟</div>
+    <h2 id="running-name" style="font-size:16px;color:var(--wh)"></h2>
+    <p style="color:var(--t2);font-size:9px;margin-top:6px">Windows Sandbox is running on your machine</p>
+    <p style="color:var(--t2);font-size:8px;margin-top:4px">Close the Sandbox window to destroy the VM</p>
+    <button class="btn" onclick="closeApp()" style="margin-top:12px;border-color:var(--er);color:var(--er)">■ Kill VM</button>
+  </div>
 </div>
 
 <div class="taskbar" id="taskbar"></div>
 
 <script src="vm/backend.js"></script>
-<script src="vm/boot.js"></script>
 <script src="vm/apps.js"></script>
 <script src="vm/taskbar.js"></script>
 <script>
 renderTaskbar(); tickClock();
-checkBackend().then(function(st) {
+checkBackend().then(function() {
   var b = document.getElementById('backend-badge');
-  var n = document.getElementById('native-badge');
   if (backendOnline) {
-    b.innerHTML = '<span style="color:var(--ok)">● Electron backend connected (localhost:8430)</span>';
-    n.innerHTML = '<span style="color:var(--ok)">● ONLINE</span>';
+    b.innerHTML = '<span style="color:var(--ok)">● Backend connected (localhost:8430)</span>';
   } else {
-    b.innerHTML = '<span style="color:var(--t2)">○ Electron backend offline — native VMs need <code>npm start</code></span>';
-    n.innerHTML = '<span style="color:var(--t2)">○ OFFLINE</span>';
+    b.innerHTML = '<span style="color:var(--er)">○ Backend offline</span><br>'
+      +'<span style="color:var(--t2);font-size:6px">Run the Electron app: <code>cd instantvm && npm start</code></span>';
   }
 });
 </script>

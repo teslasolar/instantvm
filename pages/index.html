@@ -16,16 +16,23 @@
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
     <p style="color:var(--t2);font-size:9px;margin-top:4px">VMs + Apps — click to launch</p>
 
+    <div style="color:var(--ign);font-size:8px;margin-top:16px;letter-spacing:1px">VIRTUAL MACHINES</div>
     <div class="app-grid">
+      <div class="app-icon" onclick="launchApp('vm-win98')">
+        <div class="ico">🪟</div><div class="lbl">Windows 98</div>
+      </div>
       <div class="app-icon" onclick="launchApp('vm-alpine')">
-        <div class="ico">🐧</div><div class="lbl">Alpine VM</div>
+        <div class="ico">🐧</div><div class="lbl">Alpine Linux</div>
       </div>
       <div class="app-icon" onclick="launchApp('vm-arch')">
-        <div class="ico">🐧</div><div class="lbl">Arch VM</div>
+        <div class="ico">🐧</div><div class="lbl">Arch Linux</div>
       </div>
       <div class="app-icon" onclick="launchApp('vm-freedos')">
         <div class="ico">💾</div><div class="lbl">FreeDOS</div>
       </div>
+    </div>
+    <div style="color:var(--ig);font-size:8px;margin-top:12px;letter-spacing:1px">GIT CONTROLS</div>
+    <div class="app-grid">
       <div class="app-icon" onclick="launchApp('gitcontrol')">
         <div class="ico">🎛️</div><div class="lbl">GitControl</div>
       </div>
@@ -40,12 +47,6 @@
       </div>
       <div class="app-icon" onclick="launchApp('gitplc')">
         <div class="ico">📐</div><div class="lbl">GitPLC</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('ignition')">
-        <div class="ico">🔥</div><div class="lbl">Ignition</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('perspective')">
-        <div class="ico">🏗️</div><div class="lbl">Assway</div>
       </div>
     </div>
   </div>

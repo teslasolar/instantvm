@@ -2,29 +2,36 @@
 var emulator = null;
 
 var IMAGES = {
+  'win98': {
+    name: 'Windows 98',
+    icon: '🪟',
+    hda: 'https://copy.sh/v86/images/windows98.img',
+    mem: 128,
+    vga: 32,
+  },
   'linux': {
     name: 'Alpine Linux',
     icon: '🐧',
-    bzimage: 'https://i.copy.sh/v86/alpine-bzImage',
-    rootfs: 'https://i.copy.sh/v86/alpine-rootfs.bin',
+    bzimage: 'https://copy.sh/v86/images/bzImage',
+    rootfs: 'https://copy.sh/v86/images/linux4.iso',
     mem: 128,
   },
   'freedos': {
     name: 'FreeDOS',
     icon: '💾',
-    fda: 'https://i.copy.sh/v86/freedos722.img',
+    fda: 'https://copy.sh/v86/images/freedos722.img',
     mem: 32,
   },
   'linux-full': {
     name: 'Arch Linux',
     icon: '🐧',
-    bzimage: 'https://i.copy.sh/v86/arch-linux-bzImage',
-    rootfs: 'https://i.copy.sh/v86/arch-linux-rootfs.bin',
+    cdrom: 'https://copy.sh/v86/images/arch-linux.iso',
     mem: 512,
   },
 };
 
 async function bootVM(imageId) {
+  if (emulator) stopVM();
   var img = IMAGES[imageId];
   if (!img) return;
 
@@ -36,16 +43,16 @@ async function bootVM(imageId) {
   var config = {
     wasm_path: 'https://copy.sh/v86/build/v86.wasm',
     screen_container: document.getElementById('screen-wrap'),
-    memory_size: img.mem * 1024 * 1024,
-    vga_memory_size: 8 * 1024 * 1024,
+    memory_size: (img.mem || 128) * 1024 * 1024,
+    vga_memory_size: (img.vga || 8) * 1024 * 1024,
     autostart: true,
   };
 
-  if (img.bzimage) {
-    config.bzimage = { url: img.bzimage };
-    config.initrd = { url: img.rootfs };
-  }
+  if (img.bzimage) config.bzimage = { url: img.bzimage };
+  if (img.rootfs) config.cdrom = { url: img.rootfs };
+  if (img.cdrom) config.cdrom = { url: img.cdrom };
   if (img.fda) config.fda = { url: img.fda };
+  if (img.hda) config.hda = { url: img.hda, async: true, size: 300 * 1024 * 1024 };
 
   emulator = new V86(config);
 
@@ -57,7 +64,7 @@ async function bootVM(imageId) {
 
 function stopVM() {
   if (emulator) { emulator.stop(); emulator.destroy(); emulator = null; }
+  document.getElementById('screen-wrap').style.display = 'none';
   document.getElementById('state').textContent = '● STOPPED';
   document.getElementById('state').style.color = 'var(--t2)';
-  document.getElementById('boot-splash').classList.remove('hidden');
 }

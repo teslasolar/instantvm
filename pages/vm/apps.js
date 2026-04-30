@@ -1,5 +1,6 @@
-// apps.js — loadable web apps (our Electron UIs as iframes)
+// apps.js — VMs + web apps
 var APPS = {
+  'vm-win98':    { name:'Windows 98',   icon:'🪟', type:'vm', image:'win98' },
   'vm-alpine':   { name:'Alpine Linux', icon:'🐧', type:'vm', image:'linux' },
   'vm-arch':     { name:'Arch Linux',   icon:'🐧', type:'vm', image:'linux-full' },
   'vm-freedos':  { name:'FreeDOS',      icon:'💾', type:'vm', image:'freedos' },
@@ -8,8 +9,6 @@ var APPS = {
   'githmi':      { name:'GitHMI',       icon:'🖥️', type:'web', url:'https://teslasolar.github.io/GITHMI/pages/' },
   'gittag':      { name:'GitTAG',       icon:'🏷️', type:'web', url:'https://teslasolar.github.io/GITTAG/pages/' },
   'gitplc':      { name:'GitPLC',       icon:'📐', type:'web', url:'https://teslasolar.github.io/GITPLC/pages/' },
-  'ignition':    { name:'Ignition GW',  icon:'🔥', type:'web', url:'http://localhost:8090' },
-  'perspective': { name:'Assway Demo',  icon:'🏗️', type:'web', url:'http://localhost:8090/data/perspective/client/assway_demo' },
 };
 
 var activeApp = null;

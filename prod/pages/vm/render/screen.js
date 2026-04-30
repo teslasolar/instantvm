@@ -20,8 +20,9 @@ function fitScreen() {
 
   // Find v86's native output size
   var canvas = scr.querySelector('canvas');
+  var isRealCanvas = canvas && canvas.width > 320 && canvas.style.display !== 'none';
   var nw, nh;
-  if (canvas && canvas.width > 10) {
+  if (isRealCanvas) {
     nw = canvas.width;
     nh = canvas.height;
   } else {

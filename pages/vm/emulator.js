@@ -1,32 +1,36 @@
-// emulator.js — boot Windows in browser via v86 WebAssembly
+// emulator.js — boot OS in browser via v86 WebAssembly
 var emulator = null;
 var V86_BASE = 'v86';
 
-function bootWindows() {
+function bootVM(image) {
   if (emulator) stopVM();
 
-  var splash = document.getElementById('splash');
+  document.getElementById('splash').style.display = 'none';
   var wrap = document.getElementById('screen-wrap');
-  splash.style.display = 'none';
-  wrap.style.display = 'flex';
-  wrap.style.alignItems = 'center';
-  wrap.style.justifyContent = 'center';
-  wrap.style.background = '#000';
-  setStatus('● BOOTING WINDOWS...', 'var(--wr)');
+  wrap.style.display = '';
+  wrap.innerHTML = '';
+  setStatus('● BOOTING...', 'var(--wr)');
 
-  emulator = new V86({
+  var config = {
     wasm_path: V86_BASE + '/v86.wasm',
     memory_size: 32 * 1024 * 1024,
-    vga_memory_size: 2 * 1024 * 1024,
-    screen_container: document.getElementById('screen-wrap'),
-    fda: { url: V86_BASE + '/windows101.img' },
+    vga_memory_size: 8 * 1024 * 1024,
+    screen_container: wrap,
+    bios: { url: V86_BASE + '/seabios.bin' },
+    vga_bios: { url: V86_BASE + '/vgabios.bin' },
     autostart: true,
-  });
+  };
 
+  if (image === 'freedos') config.fda = { url: V86_BASE + '/freedos.img' };
+  else config.fda = { url: V86_BASE + '/windows101.img' };
+
+  emulator = new V86(config);
   emulator.add_listener('emulator-ready', function() {
-    setStatus('● WINDOWS RUNNING', 'var(--ok)');
+    setStatus('● RUNNING', 'var(--ok)');
   });
 }
+
+function bootWindows() { bootVM('windows'); }
 
 function stopVM() {
   if (!emulator) return;

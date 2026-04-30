@@ -16,13 +16,18 @@
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
     <p style="color:var(--t2);font-size:9px;margin-top:4px">Windows VM running in your browser. Nothing local. Nothing to install.</p>
 
-    <div style="margin-top:20px;cursor:pointer" onclick="bootWindows()">
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:24px 40px;display:inline-block;transition:.2s"
-           onmouseover="this.style.borderColor='var(--ok)';this.style.transform='translateY(-2px)'"
-           onmouseout="this.style.borderColor='var(--b)';this.style.transform=''">
-        <div style="font-size:48px">🪟</div>
-        <div style="color:var(--wh);font-size:14px;font-weight:700;margin-top:8px">Launch Windows</div>
-        <div style="color:var(--t2);font-size:8px;margin-top:4px">x86 VM via WebAssembly — runs entirely in this tab</div>
+    <div style="margin-top:20px;display:flex;gap:12px;justify-content:center">
+      <div onclick="bootVM('freedos')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:20px 30px;cursor:pointer;text-align:center;transition:.2s"
+           onmouseover="this.style.borderColor='var(--ok)'" onmouseout="this.style.borderColor='var(--b)'">
+        <div style="font-size:36px">💾</div>
+        <div style="color:var(--wh);font-size:12px;font-weight:700;margin-top:6px">FreeDOS</div>
+        <div style="color:var(--t2);font-size:7px;margin-top:2px">Boots instantly</div>
+      </div>
+      <div onclick="bootVM('windows')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:20px 30px;cursor:pointer;text-align:center;transition:.2s"
+           onmouseover="this.style.borderColor='var(--ig)'" onmouseout="this.style.borderColor='var(--b)'">
+        <div style="font-size:36px">🪟</div>
+        <div style="color:var(--wh);font-size:12px;font-weight:700;margin-top:6px">Windows 1.01</div>
+        <div style="color:var(--t2);font-size:7px;margin-top:2px">First Windows GUI</div>
       </div>
     </div>
 

@@ -40,6 +40,7 @@ function bootVM(id) {
     var l = document.getElementById('boot-loader');
     if (l) l.remove();
     setStatus('● ' + img.name + ' RUNNING', 'var(--ok)');
+    fixScale();
   });
 
   emulator.add_listener('serial0-output-byte', function() {
@@ -55,6 +56,20 @@ function stopVM() {
   document.getElementById('splash').style.display = '';
   setStatus('● READY', 'var(--ok)');
 }
+
+function fixScale() {
+  var canvas = document.querySelector('#screen-wrap canvas');
+  if (!canvas || !emulator) return;
+  var wrap = document.getElementById('screen-wrap');
+  var ww = wrap.clientWidth, wh = wrap.clientHeight;
+  var cw = canvas.width, ch = canvas.height;
+  var scale = Math.min(ww / cw, wh / ch);
+  canvas.style.width = Math.floor(cw * scale) + 'px';
+  canvas.style.height = Math.floor(ch * scale) + 'px';
+  emulator.screen_set_scale(scale, scale);
+}
+
+window.addEventListener('resize', function() { if (emulator) fixScale(); });
 
 function setStatus(msg, color) {
   var el = document.getElementById('state');

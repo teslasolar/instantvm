@@ -39,6 +39,13 @@ function bootVM(id) {
   VM.emulator.add_listener('screen-set-size-graphical', function() {
     setTimeout(fitScreen, 200);
   });
+
+  // Refit periodically during boot (text mode has no size event)
+  var fitCount = 0;
+  var fitTimer = setInterval(function() {
+    fitScreen();
+    if (++fitCount > 30) clearInterval(fitTimer);
+  }, 1000);
 }
 
 function stopVM() {

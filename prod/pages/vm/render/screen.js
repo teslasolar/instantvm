@@ -14,34 +14,34 @@ function hideScreen() {
 }
 
 function fitScreen() {
+  if (!VM.emulator) return;
   var scr = document.getElementById('vm-screen');
-  if (!scr || !VM.emulator) return;
-  var sw = scr.clientWidth;
-  var sh = scr.clientHeight;
-  if (!sw || !sh) return;
+  if (!scr) return;
 
-  // Graphical canvas
+  // Find v86's native output size
   var canvas = scr.querySelector('canvas');
+  var nw, nh;
   if (canvas && canvas.width > 10) {
-    var sx = sw / canvas.width;
-    var sy = sh / canvas.height;
-    canvas.style.cssText = 'display:block;transform-origin:0 0;image-rendering:pixelated;'
-      + 'transform:scale(' + sx + ',' + sy + ')';
-    try { VM.emulator.screen_set_scale(sx, sy); } catch(e) {}
-    return;
+    nw = canvas.width;
+    nh = canvas.height;
+  } else {
+    nw = 720;
+    nh = 400;
   }
 
-  // Text-mode: reset v86 overrides, measure natural size, then CSS scale to fill
-  var divs = scr.querySelectorAll(':scope > div');
-  for (var i = 0; i < divs.length; i++) {
-    var d = divs[i];
-    if (!d.children.length) continue;
-    d.removeAttribute('style');
-    void d.offsetWidth;
-    var nw = d.offsetWidth || 720;
-    var nh = d.offsetHeight || 380;
-    d.style.cssText = 'position:absolute;top:0;left:0;transform-origin:0 0;'
-      + 'transform:scale(' + (sw/nw) + ',' + (sh/nh) + ')';
+  // Scale the whole screen container via CSS
+  var parent = scr.parentElement;
+  var pw = parent.clientWidth;
+  var ph = parent.clientHeight;
+  var sx = pw / nw;
+  var sy = ph / nh;
+
+  scr.style.cssText = 'display:block;width:' + nw + 'px;height:' + nh + 'px;'
+    + 'transform-origin:0 0;transform:scale(' + sx + ',' + sy + ');'
+    + 'background:#000;overflow:hidden;position:absolute;top:0;left:0';
+
+  if (canvas) {
+    try { VM.emulator.screen_set_scale(sx, sy); } catch(e) {}
   }
 }
 

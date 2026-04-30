@@ -31,19 +31,17 @@ function fitScreen() {
     return;
   }
 
-  // Text-mode: override v86's inline font, scale to fit
+  // Text-mode: reset v86 overrides, measure natural size, then CSS scale to fill
   var divs = scr.querySelectorAll(':scope > div');
   for (var i = 0; i < divs.length; i++) {
     var d = divs[i];
     if (!d.children.length) continue;
-    // Calculate font size so 80 chars fill the width
-    var fontSize = Math.floor(sw / 80 * 0.95);
-    d.style.cssText = 'position:absolute;top:0;left:0;width:' + sw + 'px;height:' + sh + 'px;overflow:hidden';
-    var spans = d.querySelectorAll('span');
-    for (var j = 0; j < spans.length; j++) {
-      spans[j].style.fontSize = fontSize + 'px';
-      spans[j].style.lineHeight = '1.15';
-    }
+    d.removeAttribute('style');
+    void d.offsetWidth;
+    var nw = d.offsetWidth || 720;
+    var nh = d.offsetHeight || 380;
+    d.style.cssText = 'position:absolute;top:0;left:0;transform-origin:0 0;'
+      + 'transform:scale(' + (sw/nw) + ',' + (sh/nh) + ')';
   }
 }
 

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const vm = require('./vm');
+const api = require('./api');
 
 let mainWindow;
 
@@ -11,12 +12,15 @@ function createWindow() {
     backgroundColor: '#060810',
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
-  mainWindow.loadFile(path.join(__dirname, 'ui', 'index.html'));
+  mainWindow.loadURL('https://teslasolar.github.io/instantvm/pages/');
   mainWindow.setMenuBarVisibility(false);
 }
 
-app.whenReady().then(createWindow);
-app.on('window-all-closed', () => { vm.kill(); app.quit(); });
+app.whenReady().then(() => {
+  api.start();
+  createWindow();
+});
+app.on('window-all-closed', () => { vm.kill(); api.stop(); app.quit(); });
 
 ipcMain.handle('vm-list', () => vm.list());
 ipcMain.handle('vm-status', () => vm.status());

@@ -1,0 +1,18 @@
+{
+  "_schema": "instantvm/manifest/v1",
+  "name": "InstantVM",
+  "version": "0.2.0",
+  "v86": {
+    "lib": "v86/libv86.js",
+    "wasm": "v86/v86.wasm",
+    "bios": "v86/seabios.bin",
+    "vga_bios": "v86/vgabios.bin"
+  },
+  "defaults": {
+    "memory_mb": 128,
+    "vga_mb": 8,
+    "autostart": true
+  },
+  "issue_label": "instantvm",
+  "repo": "teslasolar/instantvm"
+}

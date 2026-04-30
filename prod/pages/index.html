@@ -2,103 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>⚡ InstantVM</title>
-<link rel="stylesheet" href="ui/style.css">
-<link rel="stylesheet" href="ui/desktop.css">
+<link rel="stylesheet" href="ui/css/vars.css">
+<link rel="stylesheet" href="ui/css/responsive.css">
 <script src="v86/libv86.js"></script>
 </head>
 <body>
-
-<div class="desktop M">
-  <div id="splash">
-    <div style="font-size:52px;margin-bottom:8px">⚡</div>
-    <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:9px;margin-top:4px">Real x86 VMs in your browser. Nothing to install.</p>
-
-    <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-      <div onclick="autoBoot('dsl')" style="background:var(--card);border:2px solid var(--ok);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
-           onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-        <div style="font-size:32px">⚡</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">DSL + Tools</div>
-        <div style="color:var(--ok);font-size:7px">Auto-setup desktop</div>
-        <div style="color:var(--t2);font-size:6px">50MB · Tag Store</div>
-      </div>
-      <div onclick="launch('dsl')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
-           onmouseover="this.style.borderColor='var(--ok)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">🐧</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">DSL</div>
-        <div style="color:var(--ok);font-size:7px">Plain desktop</div>
-        <div style="color:var(--t2);font-size:6px">50MB · Manual</div>
-      </div>
-      <div onclick="launch('linux')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
-           onmouseover="this.style.borderColor='var(--ig)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">🐧</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Linux</div>
-        <div style="color:var(--ig);font-size:7px">Buildroot Shell</div>
-        <div style="color:var(--t2);font-size:6px">7MB · 128MB RAM</div>
-      </div>
-      <div onclick="launch('freedos')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
-           onmouseover="this.style.borderColor='var(--ign)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">💾</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">FreeDOS</div>
-        <div style="color:var(--ign);font-size:7px">DOS Prompt</div>
-        <div style="color:var(--t2);font-size:6px">720KB · Instant</div>
-      </div>
-      <div onclick="launch('windows101')" style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:16px 24px;cursor:pointer;text-align:center;transition:.2s;width:130px"
-           onmouseover="this.style.borderColor='var(--lav)'" onmouseout="this.style.borderColor='var(--b)'">
-        <div style="font-size:32px">🪟</div>
-        <div style="color:var(--wh);font-size:11px;font-weight:700;margin-top:4px">Win 1.01</div>
-        <div style="color:var(--lav);font-size:7px">First Windows</div>
-        <div style="color:var(--t2);font-size:6px">614KB · Floppy</div>
-      </div>
-    </div>
-
-    <div style="margin-top:16px;color:var(--t2);font-size:7px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7">
-      <div style="color:var(--ign);font-size:8px;font-weight:600;margin-bottom:3px">How it works</div>
-      <div>v86 x86 emulator compiled to WebAssembly</div>
-      <div>Boots real OS disk images — fully interactive</div>
-      <div>No plugins, no downloads, no server</div>
-      <div>Close the tab → VM destroyed</div>
-    </div>
-  </div>
-
-  <div id="screen-wrap" style="display:none;position:absolute;inset:0;background:#000"></div>
+<div class="screen">
+  <div id="launcher"></div>
+  <div id="vm-screen"></div>
 </div>
+<div class="bar" id="bar"></div>
 
-<div class="taskbar" id="taskbar">
-  <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
-  <span style="color:var(--b);margin:0 4px">│</span>
-  <span id="gpu-bar" style="display:flex;gap:4px;align-items:center;font-size:7px"></span>
-  <span style="flex:1"></span>
-  <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop</span>
-  <span style="color:var(--t2);font-size:7px;margin-left:6px">InstantVM</span>
-  <span class="tb-clock" id="tb-clock"></span>
-</div>
-
-<script src="vm/emulator.js"></script>
-<script src="vm/gpu.js"></script>
-<script src="vm/gpu-panel.js"></script>
-<script src="vm/autoboot.js"></script>
+<script src="vm/render/bar.js"></script>
+<script src="vm/render/screen.js"></script>
+<script src="vm/render/launcher.js"></script>
+<script src="vm/core/boot.js"></script>
+<script src="vm/compute/gpu.js"></script>
+<script src="vm/compute/panel.js"></script>
 <script>
 function launch(id) {
   bootVM(id);
-  document.getElementById('stop-btn').style.display = '';
   history.replaceState(null, '', '?os=' + id);
 }
-var _stop = stopVM;
-stopVM = function() { _stop(); document.getElementById('stop-btn').style.display = 'none'; history.replaceState(null, '', location.pathname); };
-setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
+var _s = stopVM;
+stopVM = function() { _s(); history.replaceState(null, '', location.pathname); };
 
-renderGPUPanel();
+(async function() {
+  await loadConfig();
+  renderBar();
+  renderLauncher();
+  renderGPUPanel();
 
-var params = new URLSearchParams(location.search);
-var autoOS = params.get('os');
-var autoSetup = params.get('setup');
-if (autoOS && IMAGES[autoOS]) {
-  if (autoSetup) autoBoot(autoOS);
-  else launch(autoOS);
-}
+  var os = new URLSearchParams(location.search).get('os');
+  if (os) launch(os);
+})();
 </script>
 </body>
 </html>

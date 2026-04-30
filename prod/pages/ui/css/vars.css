@@ -1,0 +1,11 @@
+:root {
+  --bg:#060810; --card:#0b0e16; --sf:#10141e; --b:#1a2030;
+  --t:#98a8c0; --t2:#3e4e64;
+  --ac:#38b5f9; --gd:#d4a94a; --ok:#42e898;
+  --wr:#f0a030; --er:#ff4466; --lv:#a080ff; --wh:#e8f0ff;
+  --radius: 8px;
+  --bar-h: 36px;
+}
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+* { margin:0; box-sizing:border-box; font-family:'IBM Plex Mono',monospace; }
+body { background:var(--bg); color:var(--t); min-height:100vh; min-height:100dvh; overflow:hidden; }

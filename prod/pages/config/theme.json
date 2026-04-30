@@ -1,0 +1,15 @@
+{
+  "bg": "#060810",
+  "card": "#0b0e16",
+  "surface": "#10141e",
+  "border": "#1a2030",
+  "text": "#98a8c0",
+  "muted": "#3e4e64",
+  "accent": "#38b5f9",
+  "gold": "#d4a94a",
+  "ok": "#42e898",
+  "warn": "#f0a030",
+  "error": "#ff4466",
+  "lavender": "#a080ff",
+  "white": "#e8f0ff"
+}

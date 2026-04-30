@@ -6,6 +6,7 @@
 <title>⚡ InstantVM</title>
 <link rel="stylesheet" href="ui/style.css">
 <link rel="stylesheet" href="ui/desktop.css">
+<script src="https://copy.sh/v86/lib/libv86.js"></script>
 </head>
 <body>
 
@@ -13,64 +14,51 @@
   <div id="splash">
     <div style="font-size:52px;margin-bottom:8px">⚡</div>
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:9px;margin-top:4px">Click → download .wsb → Sandbox boots → Electron self-installs + runs inside the VM</p>
-    <p style="color:var(--t2);font-size:7px;margin-top:2px">Zero local install. Disposable. Close the VM window and it's gone.</p>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">Windows VM running in your browser. Nothing local. Nothing to install.</p>
 
-    <div class="app-grid" style="margin-top:20px">
-      <div class="app-icon" onclick="launchApp('ignition')">
-        <div class="ico">🔥</div><div class="lbl">Ignition Designer</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('dev')">
-        <div class="ico">🛠️</div><div class="lbl">Dev Sandbox</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('plc')">
-        <div class="ico">📐</div><div class="lbl">PLC Sim</div>
-      </div>
-      <div class="app-icon" onclick="launchApp('browser')">
-        <div class="ico">🌐</div><div class="lbl">Clean Browser</div>
+    <div style="margin-top:20px;cursor:pointer" onclick="bootWindows()">
+      <div style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:24px 40px;display:inline-block;transition:.2s"
+           onmouseover="this.style.borderColor='var(--ok)';this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.borderColor='var(--b)';this.style.transform=''">
+        <div style="font-size:48px">🪟</div>
+        <div style="color:var(--wh);font-size:14px;font-weight:700;margin-top:8px">Launch Windows</div>
+        <div style="color:var(--t2);font-size:8px;margin-top:4px">x86 VM via WebAssembly — runs entirely in this tab</div>
       </div>
     </div>
-    <div style="margin-top:20px;background:var(--card);border:1px solid var(--b);border-radius:6px;padding:14px 20px;max-width:460px;text-align:left;font-size:7.5px;line-height:1.8">
-      <div style="color:var(--ign);font-size:8px;font-weight:700;margin-bottom:6px;letter-spacing:1px">HOW IT WORKS</div>
-      <div style="display:grid;grid-template-columns:auto 20px auto;gap:2px 0;align-items:center">
-        <span style="color:var(--ig)">GitHub Pages</span><span></span><span style="color:var(--t2)">Your Machine</span>
-        <span style="color:var(--wh)">① Click template</span><span></span><span></span>
-        <span style="color:var(--wh)">② Generate .wsb</span><span style="color:var(--ign)">→</span><span style="color:var(--wh)">③ Open .wsb file</span>
-        <span></span><span></span><span style="color:var(--ok)">④ Windows Sandbox boots</span>
-        <span></span><span></span><span style="color:var(--ok)">⑤ Node.js installs in VM</span>
-        <span></span><span></span><span style="color:var(--ok)">⑥ Clones repo from GitHub</span>
-        <span></span><span></span><span style="color:var(--ok)">⑦ npm install + Electron ⚡</span>
-        <span></span><span></span><span style="color:var(--t2)">⑧ Close window → destroyed</span>
-      </div>
+
+    <div style="margin-top:20px;color:var(--t2);font-size:7px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.8">
+      <div style="color:var(--ign);font-size:8px;font-weight:600;margin-bottom:4px">How it works</div>
+      <div>v86 is an x86 emulator compiled to WebAssembly</div>
+      <div>It boots a real Windows disk image in your browser</div>
+      <div>No plugins. No downloads. No server. Just this page.</div>
+      <div>Close the tab → gone. Nothing persists.</div>
     </div>
-    <p style="color:var(--t2);font-size:6px;margin-top:10px">Requires Windows 10/11 Pro/Enterprise with Windows Sandbox enabled</p>
   </div>
 
-  <div id="running" class="hidden" style="text-align:center">
-    <div style="font-size:48px;margin-bottom:12px">🪟</div>
-    <h2 id="running-name" style="font-size:16px;color:var(--wh)"></h2>
-    <p style="color:var(--ok);font-size:9px;margin-top:6px">Open the downloaded .wsb file</p>
-    <div style="color:var(--t2);font-size:8px;margin-top:12px;text-align:left;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.8">
-      <div><span style="color:var(--ign)">1.</span> Open the .wsb from downloads</div>
-      <div><span style="color:var(--ign)">2.</span> Windows Sandbox boots (~10s)</div>
-      <div><span style="color:var(--ign)">3.</span> Node.js auto-installs in the VM</div>
-      <div><span style="color:var(--ign)">4.</span> Repo clones from GitHub</div>
-      <div><span style="color:var(--ign)">5.</span> Electron launches your template</div>
-      <div><span style="color:var(--ign)">6.</span> Close Sandbox → destroyed</div>
-    </div>
-    <button class="btn" onclick="document.getElementById('running').classList.add('hidden');document.getElementById('splash').classList.remove('hidden');setStatus('● READY','var(--ok)')" style="margin-top:16px">← Back</button>
-  </div>
+  <div id="screen-wrap" style="display:none;position:absolute;inset:0"></div>
 </div>
 
 <div class="taskbar" id="taskbar">
   <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
   <span style="flex:1"></span>
-  <span style="color:var(--t2);font-size:7px">InstantVM · teslasolar/instantvm</span>
+  <span class="btn" onclick="stopVM()" style="font-size:7px;display:none" id="stop-btn">■ Stop VM</span>
+  <span style="color:var(--t2);font-size:7px;margin-left:6px">InstantVM</span>
   <span class="tb-clock" id="tb-clock"></span>
 </div>
 
-<script src="vm/sandbox-gen.js"></script>
-<script src="vm/apps.js"></script>
-<script>setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);</script>
+<script src="vm/emulator.js"></script>
+<script>
+var _origBoot = bootWindows;
+bootWindows = function() {
+  _origBoot();
+  document.getElementById('stop-btn').style.display = '';
+};
+var _origStop = stopVM;
+stopVM = function() {
+  _origStop();
+  document.getElementById('stop-btn').style.display = 'none';
+};
+setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);
+</script>
 </body>
 </html>

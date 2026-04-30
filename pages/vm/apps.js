@@ -1,34 +1,20 @@
-// apps.js — Windows Sandbox VMs via local Electron backend
+// apps.js — download .wsb → Windows Sandbox boots → installs + runs Electron
 var APPS = {
-  'ignition':  { name:'Ignition Designer', icon:'🔥', template:'ignition-designer' },
-  'dev':       { name:'Dev Sandbox',       icon:'🛠️', template:'dev-sandbox' },
-  'plc':       { name:'PLC Sim',           icon:'📐', template:'plc-sim' },
-  'browser':   { name:'Clean Browser',     icon:'🌐', template:'clean-browser' },
+  'ignition':  { name:'Ignition Designer', icon:'🔥', template:'ignition-designer', mem:4096 },
+  'dev':       { name:'Dev Sandbox',       icon:'🛠️', template:'dev-sandbox',       mem:4096 },
+  'plc':       { name:'PLC Sim',           icon:'📐', template:'plc-sim',           mem:2048 },
+  'browser':   { name:'Clean Browser',     icon:'🌐', template:'clean-browser',     mem:2048 },
 };
 
-var activeApp = null;
-
-async function launchApp(id) {
+function launchApp(id) {
   var app = APPS[id];
   if (!app) return;
-  if (!backendOnline) { setStatus('● START ELECTRON APP FIRST', 'var(--er)'); return; }
-  activeApp = id;
-  setStatus('● LAUNCHING ' + app.name + '...', 'var(--wr)');
+  setStatus('● GENERATING ' + app.name + '.wsb ...', 'var(--wr)');
+  downloadWSB(app.template, app.mem);
+  setStatus('● DOWNLOADED — open the .wsb file to boot the VM', 'var(--ok)');
   document.getElementById('splash').classList.add('hidden');
   document.getElementById('running').classList.remove('hidden');
   document.getElementById('running-name').textContent = app.icon + ' ' + app.name;
-  var r = await backendLaunch(app.template);
-  setStatus(r.ok ? '● ' + app.name + ' RUNNING' : '● ' + (r.error||'FAIL'), r.ok ? 'var(--ok)' : 'var(--er)');
-  renderTaskbar();
-}
-
-async function closeApp() {
-  if (backendOnline) await backendKill();
-  activeApp = null;
-  document.getElementById('running').classList.add('hidden');
-  document.getElementById('splash').classList.remove('hidden');
-  setStatus('● READY', 'var(--ok)');
-  renderTaskbar();
 }
 
 function setStatus(msg, color) {

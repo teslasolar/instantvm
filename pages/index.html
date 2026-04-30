@@ -13,8 +13,8 @@
   <div id="splash">
     <div style="font-size:52px;margin-bottom:8px">⚡</div>
     <h1 style="font-size:22px;font-weight:700;color:var(--wh)">InstantVM</h1>
-    <p style="color:var(--t2);font-size:9px;margin-top:4px">Disposable Windows VMs — click to launch</p>
-    <p id="backend-badge" style="font-size:7px;margin-top:6px;color:var(--t2)">Checking backend...</p>
+    <p style="color:var(--t2);font-size:9px;margin-top:4px">Click → download .wsb → Sandbox boots → Electron self-installs + runs inside the VM</p>
+    <p style="color:var(--t2);font-size:7px;margin-top:2px">Zero local install. Disposable. Close the VM window and it's gone.</p>
 
     <div class="app-grid" style="margin-top:20px">
       <div class="app-icon" onclick="launchApp('ignition')">
@@ -30,33 +30,34 @@
         <div class="ico">🌐</div><div class="lbl">Clean Browser</div>
       </div>
     </div>
+    <p style="color:var(--t2);font-size:6px;margin-top:16px">Requires Windows 10/11 Pro/Enterprise with Windows Sandbox enabled</p>
   </div>
 
   <div id="running" class="hidden" style="text-align:center">
     <div style="font-size:48px;margin-bottom:12px">🪟</div>
     <h2 id="running-name" style="font-size:16px;color:var(--wh)"></h2>
-    <p style="color:var(--t2);font-size:9px;margin-top:6px">Windows Sandbox is running on your machine</p>
-    <p style="color:var(--t2);font-size:8px;margin-top:4px">Close the Sandbox window to destroy the VM</p>
-    <button class="btn" onclick="closeApp()" style="margin-top:12px;border-color:var(--er);color:var(--er)">■ Kill VM</button>
+    <p style="color:var(--ok);font-size:9px;margin-top:6px">Open the downloaded .wsb file</p>
+    <div style="color:var(--t2);font-size:8px;margin-top:12px;text-align:left;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.8">
+      <div><span style="color:var(--ign)">1.</span> Open the .wsb from downloads</div>
+      <div><span style="color:var(--ign)">2.</span> Windows Sandbox boots (~10s)</div>
+      <div><span style="color:var(--ign)">3.</span> Node.js auto-installs in the VM</div>
+      <div><span style="color:var(--ign)">4.</span> Repo clones from GitHub</div>
+      <div><span style="color:var(--ign)">5.</span> Electron launches your template</div>
+      <div><span style="color:var(--ign)">6.</span> Close Sandbox → destroyed</div>
+    </div>
+    <button class="btn" onclick="document.getElementById('running').classList.add('hidden');document.getElementById('splash').classList.remove('hidden');setStatus('● READY','var(--ok)')" style="margin-top:16px">← Back</button>
   </div>
 </div>
 
-<div class="taskbar" id="taskbar"></div>
+<div class="taskbar" id="taskbar">
+  <span id="state" style="color:var(--ok);font-size:8px">● READY</span>
+  <span style="flex:1"></span>
+  <span style="color:var(--t2);font-size:7px">InstantVM · teslasolar/instantvm</span>
+  <span class="tb-clock" id="tb-clock"></span>
+</div>
 
-<script src="vm/backend.js"></script>
+<script src="vm/sandbox-gen.js"></script>
 <script src="vm/apps.js"></script>
-<script src="vm/taskbar.js"></script>
-<script>
-renderTaskbar(); tickClock();
-checkBackend().then(function() {
-  var b = document.getElementById('backend-badge');
-  if (backendOnline) {
-    b.innerHTML = '<span style="color:var(--ok)">● Backend connected (localhost:8430)</span>';
-  } else {
-    b.innerHTML = '<span style="color:var(--er)">○ Backend offline</span><br>'
-      +'<span style="color:var(--t2);font-size:6px">Run the Electron app: <code>cd instantvm && npm start</code></span>';
-  }
-});
-</script>
+<script>setInterval(function(){ var e=document.getElementById('tb-clock'); if(e) e.textContent=new Date().toLocaleTimeString(); },1000);</script>
 </body>
 </html>

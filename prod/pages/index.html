@@ -22,6 +22,7 @@
 <script src="vm/compute/gpu.js"></script>
 <script src="vm/compute/panel.js"></script>
 <script src="vm/sandbox-bridge.js"></script>
+<script src="vm/stream/viewer.js"></script>
 <script>
 function launch(id) {
   bootVM(id);
@@ -50,8 +51,16 @@ stopVM = function() { _s(); history.replaceState(null, '', location.pathname); }
     if (el && n && !VM.emulator) el.textContent = '● ' + n + ' sandbox(es) online';
   });
 
-  var os = new URLSearchParams(location.search).get('os');
-  if (os) launch(os);
+  var params = new URLSearchParams(location.search);
+  var os = params.get('os');
+  var stream = params.get('stream');
+  if (stream) {
+    showScreen();
+    document.getElementById('vm-screen').innerHTML = '<canvas id="stream-canvas"></canvas>';
+    connectStream(stream);
+  } else if (os) {
+    launch(os);
+  }
 })();
 </script>
 </body>

@@ -1,0 +1,8 @@
+{
+  "broker": "wss://broker.hivemq.com:8884/mqtt",
+  "topic_prefix": "instantvm/screen/",
+  "fps": 2,
+  "quality": 0.4,
+  "max_width": 800,
+  "input_topic": "instantvm/input/"
+}

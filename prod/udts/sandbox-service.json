@@ -1,0 +1,14 @@
+{
+  "_udt": "SandboxService",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "id": { "type": "STRING" },
+    "state": { "type": "ENUM", "values": ["IDLE","PROVISIONING","RUNNING","STREAMING","STOPPED","ERROR"] },
+    "type": { "type": "ENUM", "values": ["browser_vm","windows_sandbox","stream"] },
+    "owner": { "type": "STRING", "desc": "Agent key or wallet ID" },
+    "cost_kono": { "type": "INT" },
+    "channel": { "type": "STRING", "desc": "MQTT channel name" },
+    "expires": { "type": "TIME" },
+    "created": { "type": "TIME" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_udt": "StreamChannel",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "channel": { "type": "STRING" },
+    "state": { "type": "ENUM", "values": ["IDLE","CONNECTING","LIVE","PAUSED","CLOSED"] },
+    "broker": { "type": "STRING", "default": "wss://broker.hivemq.com:8884/mqtt" },
+    "topic": { "type": "STRING" },
+    "fps": { "type": "INT", "default": 2 },
+    "quality": { "type": "INT", "default": 40 },
+    "viewers": { "type": "INT" },
+    "bytes_sent": { "type": "INT" }
+  }
+}

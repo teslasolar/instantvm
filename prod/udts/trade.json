@@ -1,0 +1,14 @@
+{
+  "_udt": "SandboxTrade",
+  "_schema": "instantvm/udt/v1",
+  "fields": {
+    "id": { "type": "STRING" },
+    "buyer": { "type": "STRING", "desc": "Agent wallet key" },
+    "asset": { "type": "ENUM", "values": ["stream","vm_browser","vm_sandbox"] },
+    "cost": { "type": "INT", "desc": "$KONO paid" },
+    "state": { "type": "ENUM", "values": ["PENDING","PAID","ACTIVE","EXPIRED","REFUNDED"] },
+    "channel": { "type": "STRING" },
+    "session_id": { "type": "STRING" },
+    "ts": { "type": "TIME" }
+  }
+}

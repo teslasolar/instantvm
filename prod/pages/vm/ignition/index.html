@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ignition SCADA — InstantVM</title>
+<style>
+*{margin:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--dim:#888;--accent:#6366f1;--green:#22c55e;--orange:#f97316}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);padding:16px}
+.container{max-width:1100px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.sub{color:var(--dim);font-size:11px;margin-bottom:16px}
+.layout{display:flex;gap:16px}
+.screen{flex:1;background:#000;border:2px solid var(--border);border-radius:8px;overflow:hidden;min-height:500px;display:flex;align-items:center;justify-content:center;color:var(--dim);text-align:center;padding:24px}
+.panel{width:240px;display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px}
+.card h3{font-size:11px;color:var(--accent);margin-bottom:6px}
+.val{font-size:16px;font-weight:600;font-family:monospace}
+.dim{font-size:9px;color:var(--dim);margin-top:2px}
+.progress{width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:var(--accent);transition:width 0.3s}
+button{background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:12px;width:100%}
+button:disabled{opacity:0.5}
+.log{font-size:8px;color:var(--dim);font-family:monospace;max-height:120px;overflow-y:auto}
+nav{margin-bottom:12px}
+nav a{color:var(--dim);text-decoration:none;font-size:12px;margin-right:12px}
+.gpu{display:inline-block;background:var(--green);color:#000;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:600}
+@media(max-width:700px){.layout{flex-direction:column}.panel{width:100%}}
+</style></head><body>
+<div class="container">
+<nav><a href="../../">← InstantVM</a><a href="https://konomi-systems.com/kplc/">PLC</a></nav>
+<h1>🏭 Ignition SCADA <span class="gpu">WebGPU</span></h1>
+<p class="sub">inductiveautomation/ignition:8.3 — Docker → browser</p>
+<div class="layout">
+  <div class="screen" id="screen"><div><p style="font-size:48px">🏭</p><p>Click <b>Boot</b> to start</p><p style="font-size:10px;margin-top:8px">~2GB Docker image via WebGPU</p></div></div>
+  <div class="panel">
+    <div class="card"><h3>Status</h3><div class="val" id="s-status">Ready</div></div>
+    <div class="card"><h3>Progress</h3><div class="progress"><div class="progress-bar" id="s-bar" style="width:0%"></div></div><div class="dim" id="s-progress">0 / 7 layers</div></div>
+    <div class="card"><h3>WebGPU</h3><div class="val" id="s-gpu">Checking...</div></div>
+    <button id="btn" onclick="bootIgnition()">🚀 Boot Ignition</button>
+    <button onclick="window.open('http://localhost:8088')" style="background:var(--green);margin-top:4px">🌐 Open Gateway</button>
+    <div class="card"><h3>Log</h3><div class="log" id="log"></div></div>
+  </div>
+</div></div>
+<script src="boot-ui.js"></script>
+<script src="docker-fetch.js"></script>
+<script>
+async function bootIgnition(){
+  document.getElementById('btn').disabled=true;
+  setStatus('Fetching manifest...');log('Connecting to Docker Hub...');
+  try{
+    var token=await getToken('inductiveautomation/ignition');log('Auth OK');
+    var manifest=await getManifest('inductiveautomation/ignition','8.3',token);
+    if(!manifest){log('ERROR: no manifest');return;}
+    log('Layers: '+manifest.layers.length);setStatus('Downloading...');
+    for(var i=0;i<manifest.layers.length;i++){
+      var l=manifest.layers[i];var mb=(l.size/1024/1024).toFixed(1);
+      log('L'+i+': '+mb+'MB');setProgress(i+1,manifest.layers.length);
+      if(l.size<10000){log('  skip (tiny)');continue;}
+      setStatus('Layer '+i+' ('+mb+'MB)...');
+    }
+    setProgress(manifest.layers.length,manifest.layers.length);
+    setStatus('Ready — boot v86');log('Layers fetched. v86 boot next.');
+  }catch(e){log('Error: '+e.message);setStatus('Failed');}
+  document.getElementById('btn').disabled=false;
+}
+</script></body></html>

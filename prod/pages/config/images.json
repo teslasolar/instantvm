@@ -3,5 +3,5 @@
   { "id":"linux",      "name":"Buildroot Linux",  "icon":"🐧", "media":"cdrom", "file":"linux4.iso",      "mem":128, "vga":8,  "boot":"text", "size":"7MB"  },
   { "id":"freedos",    "name":"FreeDOS",           "icon":"💾", "media":"fda",   "file":"freedos.img",     "mem":32,  "vga":8,  "boot":"text", "size":"720KB" },
   { "id":"windows101", "name":"Windows 1.01",      "icon":"🪟", "media":"fda",   "file":"windows101.img",  "mem":32,  "vga":8,  "boot":"gui",  "size":"614KB" },
-  { "id":"ignition",  "name":"Ignition SCADA",    "icon":"🏭", "media":"docker","file":"vm/ignition.html", "mem":2048,"vga":64, "boot":"gui",  "size":"2GB",  "docker":"inductiveautomation/ignition:8.3", "webgpu":true }
+  { "id":"ignition",  "name":"Ignition SCADA",    "icon":"🏭", "media":"docker","file":"vm/ignition/", "mem":2048,"vga":64, "boot":"gui",  "size":"2GB",  "docker":"inductiveautomation/ignition:8.3", "webgpu":true }
 ]

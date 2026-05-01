@@ -10,6 +10,7 @@ function bootVM(id) {
   if (VM.emulator) stopVM();
   VM.image = VM.images.find(function(i){ return i.id === id; });
   if (!VM.image) return;
+  if (VM.image.media === 'docker') { window.location.href = VM.image.file; return; }
 
   var m = VM.manifest;
   var img = VM.image;

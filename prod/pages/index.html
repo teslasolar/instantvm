@@ -21,6 +21,7 @@
 <script src="vm/core/boot.js"></script>
 <script src="vm/compute/gpu.js"></script>
 <script src="vm/compute/panel.js"></script>
+<script src="vm/sandbox-bridge.js"></script>
 <script>
 function launch(id) {
   bootVM(id);
@@ -34,6 +35,20 @@ stopVM = function() { _s(); history.replaceState(null, '', location.pathname); }
   renderBar();
   renderLauncher();
   renderGPUPanel();
+
+  // Poll for live sandbox state from GitHub Issues
+  bridgeRead().then(function(states) {
+    var keys = Object.keys(states);
+    if (keys.length) {
+      var el = document.getElementById('state');
+      if (el) el.textContent = '● ' + keys.length + ' sandbox(es) online';
+    }
+  });
+  bridgeStartPoll(function(states) {
+    var el = document.getElementById('state');
+    var n = Object.keys(states).length;
+    if (el && n && !VM.emulator) el.textContent = '● ' + n + ' sandbox(es) online';
+  });
 
   var os = new URLSearchParams(location.search).get('os');
   if (os) launch(os);
